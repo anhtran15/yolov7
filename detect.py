@@ -125,7 +125,7 @@ def detect(save_img=False):
 
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=1)
+                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=2)
 
             # Print time (inference + NMS)
             print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
@@ -152,7 +152,14 @@ def detect(save_img=False):
                         else:  # stream
                             fps, w, h = 30, im0.shape[1], im0.shape[0]
                             save_path += '.mp4'
-                        vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+                        vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))    
+
+                    # Get FPS of current frame
+                    FPS = round(1 / (t2 - t1))
+                    FPS_text = 'FPS: ' + str(FPS)
+                    im0 = cv2.putText(im0, FPS_text, (50, 50), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, 
+                    (255, 255, 255), 3, cv2.LINE_AA)
                     vid_writer.write(im0)
 
     if save_txt or save_img:
